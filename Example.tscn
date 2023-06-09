@@ -1,0 +1,74 @@
+[gd_scene load_steps=10 format=3 uid="uid://bw4qn0xsatj7b"]
+
+[ext_resource type="Material" uid="uid://duaqclgprrvma" path="res://materials/debug_01_orange.material" id="2_svjll"]
+[ext_resource type="PackedScene" uid="uid://b3c7fanumcfqp" path="res://security_camera/camera/Camera.tscn" id="3_k1bme"]
+[ext_resource type="Script" path="res://security_camera/search_point/SearchPoint.gd" id="4_2xtha"]
+[ext_resource type="PackedScene" uid="uid://b40hk06cwcspg" path="res://security_camera/search_point/SearchPoint.tscn" id="4_d2l4y"]
+[ext_resource type="PackedScene" uid="uid://c75s2m6eic1vo" path="res://addons/ThirdPersonTemplate/Character/Nodes/PlayerTemplate.tscn" id="5_bru6o"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xs6k2"]
+
+[sub_resource type="Sky" id="Sky_wq6db"]
+sky_material = SubResource("ProceduralSkyMaterial_xs6k2")
+
+[sub_resource type="Environment" id="Environment_81wl6"]
+background_mode = 2
+sky = SubResource("Sky_wq6db")
+
+[sub_resource type="BoxMesh" id="BoxMesh_welra"]
+size = Vector3(1, 6, 1)
+
+[node name="Example" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_81wl6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.707107, 0, 0.707107, -0.353553, 0.866025, 0.353553, -0.612372, -0.5, 0.612372, 0, 0, 0)
+light_energy = 0.8
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Floor"]
+use_collision = true
+size = Vector3(30.0389, 1, 30.0921)
+
+[node name="Pillar1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 3, 4.5)
+mesh = SubResource("BoxMesh_welra")
+surface_material_override/0 = ExtResource("2_svjll")
+
+[node name="Pillar2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 3, 4.5)
+mesh = SubResource("BoxMesh_welra")
+surface_material_override/0 = ExtResource("2_svjll")
+
+[node name="Pillar3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 3, -8.5)
+layers = 3
+mesh = SubResource("BoxMesh_welra")
+surface_material_override/0 = ExtResource("2_svjll")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Pillar3"]
+use_collision = true
+size = Vector3(1, 6.08138, 1)
+
+[node name="SecurityCameraNoLoop" parent="." instance=ExtResource("3_k1bme")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 3.5, -6)
+_viewAngle = 30.0
+_isSearchLoop = true
+
+[node name="SearchPoint1" parent="SecurityCameraNoLoop" instance=ExtResource("4_d2l4y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.40615, -3.47686, -1.05819)
+script = ExtResource("4_2xtha")
+waitTime = 7.079
+
+[node name="SearchPoint2" parent="SecurityCameraNoLoop" instance=ExtResource("4_d2l4y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -3.5, 4)
+script = ExtResource("4_2xtha")
+waitTime = 30.0
+
+[node name="PlayerTemplate" parent="." instance=ExtResource("5_bru6o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4569, 0.182562, -0.581503)
+collision_layer = 2
